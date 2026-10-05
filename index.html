@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Anmeldung Stadtmeisterschaft 2025</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 16px;
+      background: #f6f7f9;
+    }
+    h1 { text-align: center; margin-bottom: 20px; }
+    form {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 18px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+    label { display:block; margin-top:12px; font-weight:600; }
+    input, select, button {
+      width:100%; padding:8px; margin-top:6px; border:1px solid #ccc; border-radius:6px;
+      box-sizing: border-box;
+    }
+    .team { border:1px solid #e0e0e0; padding:12px; margin-top:18px; border-radius:6px; background:#fbfbfb; }
+    .shooter-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+    .shooter-row input { flex: 1 1 30%; min-width:100px; }
+    @media (max-width: 640px) {
+      .shooter-row { flex-direction: column; }
+      .shooter-row input { width:100%; }
+    }
+    .pdf-link { margin:18px 0; text-align:left; }
+    .pdf-link a { display:inline-block; background:#0055aa; color:#fff; padding:10px 14px; border-radius:8px; text-decoration:none; font-weight:600; }
+    .pdf-link a:hover { background:#004080; }
+    button[type="submit"] { background:#007bff; color:#fff; border:none; padding:12px; font-weight:700; cursor:pointer; }
+    button[type="submit"]:hover { background:#005bb5; }
+  </style>
+</head>
+<body>
+  <h1>Anmeldung Stadtmeisterschaft 2026</h1>
+
+  <form action="https://formspree.io/f/xblzdanq" method="POST" id="signupForm">
+    <label for="organizer">Verantwortlicher Anmelder / Vereins- oder Firmenname</label>
+    <input type="text" id="organizer" name="organizer" required>
+
+    <label for="email">E-Mail des Anmelders (für Bestätigungen)</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="teamCount">Anzahl der Mannschaften</label>
+    <select id="teamCount" name="teamCount" required>
+      <option value="">Bitte wählen...</option>
+      <!-- Optionen werden per JS erzeugt -->
+    </select>
+
+    <div id="teamsContainer"></div>
+
+    <div class="pdf-link">
+      <a href="stadtmeisterschaft_regelwerk.pdf" target="_blank" rel="noopener">
+        📄 Einladung & Regelwerk (PDF) herunterladen
+      </a>
+    </div>
+
+    <button type="submit">Anmeldung absenden</button>
+  </form>
+
+  <script>
+    // Options 1..20 erzeugen
+    document.addEventListener('DOMContentLoaded', () => {
+      const sel = document.getElementById('teamCount');
+      for (let i = 1; i <= 20; i++) {
+        const opt = document.createElement('option');
+        opt.value = String(i);
+        opt.textContent = `${i} ${i === 1 ? 'Mannschaft' : 'Mannschaften'}`;
+        sel.appendChild(opt);
+      }
+      sel.addEventListener('change', generateTeams);
+    });
+
+    function generateTeams() {
+      const container = document.getElementById('teamsContainer');
+      container.innerHTML = ''; // clear
+      const raw = document.getElementById('teamCount').value;
+      const teamCount = parseInt(raw, 10) || 0;
+      if (teamCount < 1) return;
+
+      for (let i = 1; i <= teamCount; i++) {
+        const div = document.createElement('div');
+        div.className = 'team';
+        div.innerHTML = `
+          <h3>Mannschaft ${i}</h3>
+          <label for="team${i}_name">Mannschaftsname</label>
+          <input type="text" id="team${i}_name" name="team${i}_name" required>
+
+          <div class="shooter-row">
+            <input type="text" name="team${i}_shooter1_first" placeholder="Vorname Schütze 1" required>
+            <input type="text" name="team${i}_shooter1_last" placeholder="Nachname Schütze 1" required>
+            <input type="number" name="team${i}_shooter1_year" placeholder="Geburtsjahr" min="1900" max="2025" required>
+          </div>
+
+          <div class="shooter-row">
+            <input type="text" name="team${i}_shooter2_first" placeholder="Vorname Schütze 2" required>
+            <input type="text" name="team${i}_shooter2_last" placeholder="Nachname Schütze 2" required>
+            <input type="number" name="team${i}_shooter2_year" placeholder="Geburtsjahr" min="1900" max="2025" required>
+          </div>
+
+          <div class="shooter-row">
+            <input type="text" name="team${i}_shooter3_first" placeholder="Vorname Schütze 3" required>
+            <input type="text" name="team${i}_shooter3_last" placeholder="Nachname Schütze 3" required>
+            <input type="number" name="team${i}_shooter3_year" placeholder="Geburtsjahr" min="1900" max="2025" required>
+          </div>
+
+          <div class="shooter-row">
+            <input type="text" name="team${i}_shooter4_first" placeholder="Vorname Schütze 4" required>
+            <input type="text" name="team${i}_shooter4_last" placeholder="Nachname Schütze 4" required>
+            <input type="number" name="team${i}_shooter4_year" placeholder="Geburtsjahr" min="1900" max="2025" required>
+          </div>
+        `;
+        container.appendChild(div);
+      }
+    }
+  </script>
+</body>
+</html>
